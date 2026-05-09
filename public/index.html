@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SoloCreator.AI – Your Personal Content Partner</title>
+<meta name="description" content="AI-powered content generator for solo creators.">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+:root{--bg:#F6F3EE;--surf:#FFF;--surf2:#EFEBE4;--bdr:#E0DAD1;--tx:#18160F;--mu:#635D55;--hi:#9C9690;--am:#C9780C;--aml:#FDF0DC;--amb:#EDB96A;--rbg:#FEE8E8;--red:#B83232;--gbg:#E4F2EB;--grn:#1A6035;--r:14px;--rs:9px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;font-size:15px;line-height:1.6}
+nav{background:var(--surf);border-bottom:1px solid var(--bdr);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.brand{font-family:'DM Serif Display',serif;font-size:21px;color:var(--tx);text-decoration:none}
+.brand b{color:var(--am);font-weight:400}
+.nav-badge{background:var(--aml);color:var(--am);border:1px solid var(--amb);border-radius:20px;padding:3px 12px;font-size:12px;font-weight:500;display:none}
+main{max-width:780px;margin:0 auto;padding:32px 20px 80px}
+.hero{text-align:center;margin-bottom:32px}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:6px;background:var(--aml);color:var(--am);border:1px solid var(--amb);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:500;margin-bottom:14px}
+.hero h1{font-family:'DM Serif Display',serif;font-size:clamp(26px,4vw,36px);line-height:1.2;margin-bottom:10px}
+.hero p{color:var(--mu);font-size:16px}
+.card{background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r);padding:22px;margin-bottom:14px;box-shadow:0 1px 8px rgba(0,0,0,.05)}
+.ctitle{font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--hi);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.pill-group{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:20px}
+.pill{padding:7px 15px;border-radius:30px;border:1px solid var(--bdr);font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;background:var(--surf2);color:var(--mu);transition:all .15s;user-select:none;display:inline-flex;align-items:center;gap:5px}
+.pill:hover{border-color:var(--amb);color:var(--am);background:var(--aml)}
+.pill.on{background:var(--aml);border-color:var(--amb);color:var(--am);font-weight:500}
+.slabel{font-size:12px;color:var(--mu);margin-bottom:8px;font-weight:500}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+@media(max-width:500px){.row2{grid-template-columns:1fr}}
+.field label{display:block;font-size:12px;font-weight:500;color:var(--mu);margin-bottom:6px}
+select,textarea{width:100%;padding:10px 13px;border:1px solid var(--bdr);border-radius:var(--rs);background:var(--surf2);color:var(--tx);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color .15s,background .15s;appearance:none}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%23888' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+select:focus,textarea:focus{border-color:var(--amb);background:var(--surf)}
+textarea{height:78px;resize:none}
+textarea::placeholder{color:var(--hi)}
+.ctx-wrap{position:relative}
+.ctx-count{position:absolute;bottom:8px;right:10px;font-size:11px;color:var(--hi);pointer-events:none}
+.gen-btn{width:100%;padding:14px;background:var(--am);color:#fff;border:none;border-radius:var(--rs);font-family:'DM Sans',sans-serif;font-size:16px;font-weight:600;cursor:pointer;margin-top:14px;transition:opacity .15s,transform .1s;display:flex;align-items:center;justify-content:center;gap:9px}
+.gen-btn:hover:not(:disabled){opacity:.9}
+.gen-btn:active:not(:disabled){transform:scale(.99)}
+.gen-btn:disabled{opacity:.45;cursor:not-allowed}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{animation:spin .8s linear infinite;display:inline-block}
+.alert{padding:12px 16px;border-radius:var(--rs);font-size:13px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.alert-err{background:var(--rbg);color:var(--red);border:1px solid #f5c0c0}
+.alert span{flex:1}
+.alert-x{cursor:pointer;font-size:18px;opacity:.6;flex-shrink:0}
+.alert-x:hover{opacity:1}
+@keyframes shimmer{0%{background-position:-600px 0}100%{background-position:600px 0}}
+.sk{background:linear-gradient(90deg,var(--surf2) 25%,var(--bdr) 50%,var(--surf2) 75%);background-size:600px 100%;animation:shimmer 1.4s infinite;border-radius:6px;height:14px;margin-bottom:10px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.rcard{background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r);padding:22px;margin-bottom:14px;box-shadow:0 2px 16px rgba(0,0,0,.07);animation:fadeUp .3s ease}
+.rtop{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+.rinfo h3{font-size:15px;font-weight:600;margin-bottom:6px}
+.tag-row{display:flex;flex-wrap:wrap;gap:5px}
+.tag{font-size:11px;padding:2px 10px;border-radius:20px;background:var(--surf2);color:var(--mu);border:1px solid var(--bdr)}
+.actions{display:flex;gap:7px;flex-shrink:0}
+.abtn{padding:7px 13px;border:1px solid var(--bdr);border-radius:var(--rs);background:var(--surf);cursor:pointer;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--mu);display:flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap}
+.abtn:hover{background:var(--surf2);border-color:var(--amb);color:var(--am)}
+.abtn.done{background:var(--gbg);border-color:#9fd4b6;color:var(--grn)}
+.rbody{font-size:14px;line-height:1.85;color:var(--tx);white-space:pre-wrap;word-break:break-word;border-top:1px solid var(--bdr);padding-top:16px}
+.rfoot{margin-top:16px;padding-top:12px;border-top:1px solid var(--bdr);display:flex;gap:18px;flex-wrap:wrap}
+.stat{font-size:12px;color:var(--hi);display:flex;align-items:center;gap:4px}
+.stats-bar{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.sbox{background:var(--surf);border:1px solid var(--bdr);border-radius:var(--rs);padding:14px 16px;text-align:center}
+.sbox .num{font-size:22px;font-weight:600;color:var(--am);font-family:'DM Serif Display',serif}
+.sbox .lbl{font-size:11px;color:var(--hi);margin-top:2px}
+.hwrap{margin-top:6px}
+.hhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.htitle{font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--hi);display:flex;align-items:center;gap:7px}
+.hcnt{background:var(--aml);color:var(--am);border:1px solid var(--amb);border-radius:20px;padding:1px 8px;font-size:11px;font-weight:600}
+.hitem{border:1px solid var(--bdr);border-radius:var(--rs);padding:12px 16px;margin-bottom:7px;cursor:pointer;transition:all .15s;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.hitem:hover{border-color:var(--amb);background:var(--aml)}
+.hitem h4{font-size:14px;font-weight:500;margin-bottom:2px}
+.hitem p{font-size:12px;color:var(--mu)}
+.hitem-r{font-size:12px;color:var(--hi);white-space:nowrap}
+footer{text-align:center;padding:30px 20px;font-size:12px;color:var(--hi);border-top:1px solid var(--bdr);margin-top:40px}
+footer a{color:var(--am);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a class="brand" href="#">Solo<b>Creator</b>.AI</a>
+  <span class="nav-badge" id="navBadge"></span>
+</nav>
+<main>
+  <div class="hero">
+    <div class="hero-eyebrow"><i class="bi bi-stars"></i> AI Content Generator</div>
+    <h1>Your Personal Content Partner</h1>
+    <p>Platform-smart captions, scripts, calendars &amp; more — completely free.</p>
+  </div>
+
+  <div class="stats-bar" id="statsBar" style="display:none">
+    <div class="sbox"><div class="num" id="s1">0</div><div class="lbl">Generated</div></div>
+    <div class="sbox"><div class="num" id="s2">0</div><div class="lbl">Words Created</div></div>
+    <div class="sbox"><div class="num" id="s3">0</div><div class="lbl">In History</div></div>
+  </div>
+
+  <div class="card">
+    <div class="ctitle"><i class="bi bi-phone"></i> Platform &amp; Niche</div>
+    <div class="slabel">Platform</div>
+    <div class="pill-group" id="platRow">
+      <div class="pill on" data-v="Instagram" onclick="pick('platRow',this)"><i class="bi bi-instagram"></i> Instagram</div>
+      <div class="pill" data-v="TikTok" onclick="pick('platRow',this)"><i class="bi bi-tiktok"></i> TikTok</div>
+      <div class="pill" data-v="YouTube" onclick="pick('platRow',this)"><i class="bi bi-youtube"></i> YouTube</div>
+      <div class="pill" data-v="LinkedIn" onclick="pick('platRow',this)"><i class="bi bi-linkedin"></i> LinkedIn</div>
+      <div class="pill" data-v="Twitter/X" onclick="pick('platRow',this)"><i class="bi bi-twitter-x"></i> Twitter/X</div>
+    </div>
+    <div class="slabel">Niche</div>
+    <div class="pill-group" id="nicheRow">
+      <div class="pill on" data-v="Fashion" onclick="pick('nicheRow',this)">Fashion</div>
+      <div class="pill" data-v="Fitness" onclick="pick('nicheRow',this)">Fitness</div>
+      <div class="pill" data-v="Food & Recipes" onclick="pick('nicheRow',this)">Food</div>
+      <div class="pill" data-v="Travel" onclick="pick('nicheRow',this)">Travel</div>
+      <div class="pill" data-v="Education" onclick="pick('nicheRow',this)">Education</div>
+      <div class="pill" data-v="Tech & Gadgets" onclick="pick('nicheRow',this)">Tech</div>
+      <div class="pill" data-v="Beauty & Skincare" onclick="pick('nicheRow',this)">Beauty</div>
+      <div class="pill" data-v="Gaming" onclick="pick('nicheRow',this)">Gaming</div>
+      <div class="pill" data-v="Personal Finance" onclick="pick('nicheRow',this)">Finance</div>
+      <div class="pill" data-v="Mental Health & Wellness" onclick="pick('nicheRow',this)">Wellness</div>
+      <div class="pill" data-v="Business & Entrepreneurship" onclick="pick('nicheRow',this)">Business</div>
+      <div class="pill" data-v="Parenting" onclick="pick('nicheRow',this)">Parenting</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ctitle"><i class="bi bi-sliders"></i> Content Settings</div>
+    <div class="row2">
+      <div class="field">
+        <label>Content Type</label>
+        <select id="contentType">
+          <option value="3 Caption Variants">3 Caption Variants</option>
+          <option value="Video Script">Video Script (Hook + Body + CTA)</option>
+          <option value="Hashtag Strategy">Hashtag Strategy (30 tags)</option>
+          <option value="7-Day Content Calendar">7-Day Content Calendar</option>
+          <option value="5 Hook Ideas">5 Scroll-Stopping Hooks</option>
+          <option value="Profile Bio">Profile Bio (3 versions)</option>
+          <option value="CTA Pack">CTA Pack (5 options)</option>
+          <option value="10 Video Ideas">10 Video Ideas</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Tone</label>
+        <select id="tone">
+          <option value="Casual & Relatable">Casual &amp; Relatable</option>
+          <option value="Funny & Witty">Funny &amp; Witty</option>
+          <option value="Motivational">Motivational</option>
+          <option value="Educational">Educational</option>
+          <option value="Professional">Professional</option>
+          <option value="Emotional & Heartfelt">Emotional &amp; Heartfelt</option>
+          <option value="Bold & Confident">Bold &amp; Confident</option>
+          <option value="Storytelling">Storytelling</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>Additional Context <span style="font-weight:300;color:var(--hi)">(optional — makes output 10x better)</span></label>
+      <div class="ctx-wrap">
+        <textarea id="ctx" maxlength="300" placeholder="e.g. This is a reel about my morning routine, targeting working moms aged 25-35, I have 12K followers..." oninput="upCount()"></textarea>
+        <span class="ctx-count" id="ctxC">0 / 300</span>
+      </div>
+    </div>
+    <button class="gen-btn" id="genBtn" onclick="generate()">
+      <i class="bi bi-stars" id="btnIco"></i>
+      <span id="btnTxt">Generate Content</span>
+    </button>
+  </div>
+
+  <div id="alertBox" style="display:none"></div>
+  <div id="resultArea"></div>
+
+  <div id="histWrap" class="hwrap" style="display:none">
+    <div class="hhead">
+      <div class="htitle"><i class="bi bi-clock-history"></i> Recent Generations <span class="hcnt" id="hCnt">0</span></div>
+      <button class="abtn" onclick="clearH()"><i class="bi bi-trash"></i> Clear All</button>
+    </div>
+    <div id="hList"></div>
+  </div>
+</main>
+<footer>
+  <p>Made with ❤️ by <strong>Yashasvi Dhule</strong> &nbsp;·&nbsp; SoloCreator.AI 2025</p>
+  <p style="margin-top:6px">Powered by <a href="https://groq.com" target="_blank">Groq</a> &nbsp;·&nbsp; Deployed on <a href="https://vercel.com" target="_blank">Vercel</a></p>
+</footer>
+<script>
+const G={platform:'Instagram',niche:'Fashion',history:[],count:0,words:0};
+function pick(r,el){document.querySelectorAll('#'+r+' .pill').forEach(p=>p.classList.remove('on'));el.classList.add('on');r==='platRow'?G.platform=el.dataset.v:G.niche=el.dataset.v}
+function upCount(){document.getElementById('ctxC').textContent=document.getElementById('ctx').value.length+' / 300'}
+function wc(t){return t.trim().split(/\s+/).filter(Boolean).length}
+function ago(ts){const d=Math.floor((Date.now()-ts)/1000);if(d<60)return'just now';if(d<3600)return Math.floor(d/60)+'m ago';return Math.floor(d/3600)+'h ago'}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function showErr(msg){const b=document.getElementById('alertBox');b.innerHTML=`<div class="alert alert-err"><span><i class="bi bi-exclamation-triangle"></i> ${msg}</span><span class="alert-x" onclick="this.closest('.alert').parentElement.style.display='none'">&times;</span></div>`;b.style.display='block'}
+function renderResult(txt,meta){const id='r'+Date.now();document.getElementById('resultArea').innerHTML=`<div class="rcard" id="${id}"><div class="rtop"><div class="rinfo"><h3>${meta.ct}</h3><div class="tag-row"><span class="tag"><i class="bi bi-phone"></i> ${meta.platform}</span><span class="tag">${meta.niche}</span><span class="tag">${meta.tone}</span></div></div><div class="actions"><button class="abtn" id="cp${id}" onclick="doCopy('${id}')"><i class="bi bi-clipboard"></i> Copy</button><button class="abtn" onclick="doDown('${id}','${meta.ct.replace(/['"]/g,'')}')" title="Download"><i class="bi bi-download"></i></button></div></div><div class="rbody" id="rb${id}">${esc(txt)}</div><div class="rfoot"><span class="stat"><i class="bi bi-fonts"></i> ${wc(txt)} words</span><span class="stat"><i class="bi bi-lightning"></i> Groq AI</span><span class="stat"><i class="bi bi-clock"></i> Just now</span></div></div>`;document.getElementById('resultArea').scrollIntoView({behavior:'smooth',block:'nearest'})}
+function doCopy(id){const el=document.getElementById('rb'+id);if(!el)return;navigator.clipboard.writeText(el.innerText).then(()=>{const b=document.getElementById('cp'+id);b.innerHTML='<i class="bi bi-check2"></i> Copied!';b.classList.add('done');setTimeout(()=>{b.innerHTML='<i class="bi bi-clipboard"></i> Copy';b.classList.remove('done')},2000)})}
+function doDown(id,ct){const el=document.getElementById('rb'+id);if(!el)return;const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([el.innerText],{type:'text/plain'}));a.download=ct.replace(/\s+/g,'_')+'_'+Date.now()+'.txt';a.click()}
+function updateStats(){document.getElementById('statsBar').style.display='grid';document.getElementById('s1').textContent=G.count;document.getElementById('s2').textContent=G.words.toLocaleString();document.getElementById('s3').textContent=G.history.length;const b=document.getElementById('navBadge');b.style.display='inline-block';b.textContent=G.count+' generated'}
+function addH(txt,meta){G.history.unshift({txt,meta});if(G.history.length>8)G.history.pop();renderH()}
+function renderH(){const w=document.getElementById('histWrap'),l=document.getElementById('hList'),c=document.getElementById('hCnt');if(!G.history.length){w.style.display='none';return}w.style.display='block';c.textContent=G.history.length;l.innerHTML=G.history.map((h,i)=>`<div class="hitem" onclick="restoreH(${i})"><div><h4>${h.meta.ct}</h4><p>${h.meta.platform} · ${h.meta.niche} · ${ago(h.meta.ts)}</p></div><div class="hitem-r"><i class="bi bi-arrow-counterclockwise"></i> Restore</div></div>`).join('')}
+function restoreH(i){const h=G.history[i];if(h)renderResult(h.txt,h.meta);window.scrollTo({top:0,behavior:'smooth'})}
+function clearH(){G.history=[];renderH();updateStats()}
+async function generate(){
+  const ct=document.getElementById('contentType').value,tone=document.getElementById('tone').value,ctx=document.getElementById('ctx').value.trim();
+  const btn=document.getElementById('genBtn'),ico=document.getElementById('btnIco'),t=document.getElementById('btnTxt');
+  document.getElementById('alertBox').style.display='none';
+  btn.disabled=true;ico.className='bi bi-arrow-repeat spin';t.textContent='Generating…';
+  document.getElementById('resultArea').innerHTML=`<div class="card"><div style="margin-bottom:14px"><div class="sk" style="width:55%"></div><div class="sk" style="width:88%"></div><div class="sk" style="width:72%"></div><div class="sk" style="width:83%;margin-bottom:0"></div></div><p style="font-size:13px;color:var(--hi);text-align:center;padding:10px 0"><i class="bi bi-arrow-repeat spin"></i>&nbsp; Crafting your ${ct.toLowerCase()}…</p></div>`;
+  try{
+    const res=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({platform:G.platform,niche:G.niche,contentType:ct,tone,context:ctx})});
+    const data=await res.json();
+    if(!res.ok)throw new Error(data.error||'Server error');
+    const meta={platform:G.platform,niche:G.niche,ct,tone,ts:Date.now()};
+    renderResult(data.result,meta);addH(data.result,meta);
+    G.count++;G.words+=wc(data.result);updateStats();
+  }catch(e){document.getElementById('resultArea').innerHTML='';showErr(e.message)}
+  finally{btn.disabled=false;ico.className='bi bi-stars';t.textContent='Generate Content'}
+}
+</script>
+</body>
+</html>
